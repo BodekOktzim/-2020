@@ -56,11 +56,11 @@ app.get('/search', async (req, res) => {
 
     if (!value) {
 
-        return res.json({
-            success: false,
-            message: 'Missing value'
-        });
-    }
+    return res.json({
+        success: false,
+        error: 'Missing value'
+    });
+}
 
     const db = new sqlite3.Database(DB_FILE);
 
