@@ -11,7 +11,8 @@ const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'facebook.db');
 
 const DRIVE_URL =
-'https://drive.google.com/uc?export=download&id=19PySmJzwy_pQq_rLfEywx32af0i9ABvm';
+'const DRIVE_URL =
+'https://www.dropbox.com/scl/fi/2lexnf75czsrap1zxm3za/facebook.db-2020?rlkey=72a5jth0f255sgix7376fa20w&dl=1';
 
 app.use(express.static('public'));
 
