@@ -100,7 +100,7 @@ async function searchData(){
         if(!data.success){
 
             result.innerText =
-            ''Error: ' + data.error;
+            'Error: ' + (data.error || data.message);
 
             return;
         }
