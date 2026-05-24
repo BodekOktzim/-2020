@@ -1,87 +1,201 @@
-html
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Search Bot 2020</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .chat-container { width: 100%; max-width: 600px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: #1877f2; color: white; padding: 15px; text-align: center; font-size: 1.2em; font-weight: bold; }
-        .content { padding: 20px; }
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
-        button { background: #1877f2; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #166fe5; }
-        .results { background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 8px; display: none; white-space: pre-wrap; font-family: monospace; }
-        .footer { padding: 10px; font-size: 0.8em; color: #65676b; text-align: center; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facebook Search Bot 2020</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.header {
+    background: #1877f2;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.content {
+    padding: 20px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+button {
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #166fe5;
+}
+
+.results {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+.footer {
+    padding: 10px;
+    font-size: 0.8em;
+    color: #65676b;
+    text-align: center;
+}
+</style>
 </head>
+
 <body>
 
 <div class="chat-container">
     <div class="header">Facebook Search Bot</div>
+
     <div class="content">
-        <p>שלח לי מספר טלפון, קישור לפרופיל, או ID:</p>
+        <p>שלח מספר טלפון, קישור לפרופיל או ID:</p>
+
         <div class="input-group">
-            <input type="text" id="userInput" placeholder="לדוגמה: 052-123-4567">
+            <input type="text" id="userInput" placeholder="052-123-4567">
             <button onclick="handleSearch()">חפש</button>
         </div>
+
         <div id="results" class="results"></div>
     </div>
-    <div class="footer">מבוסס על מאגר פייסבוק 2020</div>
+
+    <div class="footer">
+        מבוסס על מאגר פייסבוק 2020
+    </div>
 </div>
 
 <script>
-// אלגוריתם נרמול טלפון (מקורות 9-10)
+
 function normalizePhoneNumber(input) {
-    let digits = input.replace(/[^\d]/g, ''); // הסרת תווים שאינם ספרות [1]
+
+    let digits = input.replace(/[^\d]/g, '');
+
     if (digits.startsWith('00972')) {
-        digits = digits.substring(2); // הסרת 00 [1]
+
+        digits = digits.substring(2);
+
     } else if (digits.startsWith('0')) {
-        digits = '972' + digits.substring(1); // החלפת 0 ב-972 [1, 2]
+
+        digits = '972' + digits.substring(1);
+
     } else if (!digits.startsWith('972')) {
-        digits = '972' + digits; // הוספת 972 אם חסר [2]
+
+        digits = '972' + digits;
+
     }
-    return (digits.length === 12) ? digits : null; // אימות אורך [2]
+
+    return digits.length === 12 ? digits : null;
 }
 
-// זיהוי סוג קלט (מקורות 14-15)
 function detectInputType(input) {
-    if (input.includes("facebook.com")) return "URL";
-    if (/^[0-9+\-. /]+$`/.test(input)) {
+
+    if (input.includes("facebook.com")) {
+        return "URL";
+    }
+
+    if (/^[0-9+\-. /]+$/.test(input)) {
+
         let clean = input.replace(/[^\d]/g, '');
-        if (clean.length > 12) return "ID";
+
+        if (clean.length > 12) {
+            return "ID";
+        }
+
         return "PHONE";
     }
+
     return "UNKNOWN";
 }
 
 function handleSearch() {
-    const input = document.getElementById('userInput').value;
+
+    const input = document.getElementById('userInput').value.trim();
+
     const resultsDiv = document.getElementById('results');
+
     const type = detectInputType(input);
-    
+
     resultsDiv.style.display = 'block';
-    resultsDiv.innerHTML = "🔍 מעבד נתונים...";
+
+    resultsDiv.textContent = "🔍 מעבד נתונים...";
 
     let finalValue = input;
+
     if (type === "PHONE") {
+
         finalValue = normalizePhoneNumber(input);
+
         if (!finalValue) {
-            resultsDiv.innerHTML = "❌ לא נמצא במאגר\nשלח לי מספר טלפון תקין [3]";
+
+            resultsDiv.textContent =
+`❌ לא נמצא במאגר
+שלח מספר טלפון תקין`;
+
             return;
         }
     }
 
-    // תבנית התגובה כפי שמופיעה בתיעוד (מקור 13)
-    const responseTemplate = `!נמצא במאגר ✅\n\n:פרטים 📋\n─────────────────────────────────────\nסוג קלט: `${type}\nערך לחיפוש: ${finalValue}\n\n(כאן יש לקשר את השרת למאגר facebook.db)`;
-    
+    const responseTemplate =
+`✅ נמצא במאגר
+
+📋 פרטים
+────────────────────────────
+
+סוג קלט: ${type}
+
+ערך לחיפוש: ${finalValue}
+
+(כאן מחברים למסד הנתונים facebook.db)`;
+
     setTimeout(() => {
-        resultsDiv.innerHTML = responseTemplate;
+
+        resultsDiv.textContent = responseTemplate;
+
     }, 1000);
 }
+
 </script>
+
 </body>
 </html>
