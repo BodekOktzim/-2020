@@ -12,7 +12,7 @@ const DB_FILE = path.join(__dirname, 'facebook.db');
 
 const DRIVE_URL =
 'const DRIVE_URL =
-'https://www.dropbox.com/scl/fi/2lexnf75czsrap1zxm3za/facebook.db-2020?rlkey=72a5jth0f255sgix7376fa20w&dl=1';
+'https://dl.dropboxusercontent.com/scl/fi/2lexnf75czsrap1zxm3za/facebook.db-2020?rlkey=72a5jth0f255sgix7376fa20w';
 
 app.use(express.static('public'));
 
